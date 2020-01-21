@@ -28,4 +28,8 @@ RUN dpkg-buildpackage -uc -b \
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/bin/bash"]
+WORKDIR /home/
+COPY . .
+ENV IMAGE_SIZE 8G
+# CMD ["/bin/bash create_image.sh"]
+ENTRYPOINT [ "/bin/bash" ]
