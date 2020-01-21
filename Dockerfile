@@ -6,10 +6,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq \
     && apt-get install --no-install-recommends -y \
     build-essential \
-    libwxgtk3.0-dev dosfstools devscripts equivs gdebi-core \
+    devscripts equivs gdebi-core \
     git ca-certificates \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
     && update-ca-certificates
 
 WORKDIR /usr/src/woeusb
@@ -24,7 +22,10 @@ RUN mk-build-deps \
     && gdebi --n woeusb-build-deps_*_all.deb
 
 RUN dpkg-buildpackage -uc -b \
-    && apt-get update -qq \
     && gdebi --n ../woeusb_*_*.deb
+
+# Post install clean up
+RUN apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/bin/bash"]
