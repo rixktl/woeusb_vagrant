@@ -1,0 +1,13 @@
+---
+    - name: Install WoeUSB
+      hosts: all
+      become: true
+      tasks:
+        - name: Add WoeUSB source repository
+          apt_repository:
+            repo: ppa:nilarimogard/webupd8
+        - name: Install package
+          apt:
+            name:
+              - woeusb
+            state: present
