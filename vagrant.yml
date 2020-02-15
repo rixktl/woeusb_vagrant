@@ -11,3 +11,17 @@
             name:
               - woeusb
             state: present
+
+    - name: Create installer image
+      hosts: all
+      tasks:
+        - name: Wait for ISO image to be available
+          wait_for:
+            path: /dev/sr0
+            state: present
+        - name: Generate installer image
+          become: true
+          command: woeusb --target-filesystem NTFS --device /dev/sr0 /dev/sdb
+          register: woeusb
+        - debug: msg="{{ woeusb.stdout }}"
+        - debug: msg="{{ woeusb.stderr }}"
